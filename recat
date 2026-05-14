@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# as in REcursive CAT
+
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+BLUE="$(tput setaf 4)"
+CYAN="$(tput setaf 6)"
+GREY="$(tput setaf 8)"
+BOLD="$(tput bold)"
+NC="$(tput sgr0)"
+
+#TODO: make separte repo for custom bins/scripts
+#TODO:  `-> make it as submodule in dotfiles
+#TODO:       `-> in setup make it symlink to ~/.local/bin
+#TODO: make stderr show up as red text
+recat(){
+	local depth=$2
+	local depth=$(( $depth+1 ))
+
+	local dir=$1
+	if [ -n "$dir" ]; then
+		local dir+="/"
+	fi
+
+	local indent=$( printf -v dents '%*s' "$depth"; printf '%s' "${dents// /'  '}" )
+
+	for i in $( ls $dir ); do
+		if [ -L $i ]; then
+			echo -n $CYAN
+			echo -n "$indent"
+			stat $i | grep File | tail -c +9
+			echo -n $NC
+		elif [ -d $i ]; then
+			echo "$indent"$BLUE$i$NC:
+			recat $dir$i $depth
+		else
+			echo $GREEN"$indent"$i$NC:
+			cat -n $dir$i | sed -e "s/\t/$NC /g" -e "s/^/$indent$GREY│/"
+			#) 2> >(cat < <(echo $RED) - < <(echo $NC))
+		fi
+	done
+}
+
+recat $@
