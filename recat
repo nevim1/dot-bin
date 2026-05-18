@@ -9,13 +9,10 @@ GREY="$(tput setaf 8)"
 BOLD="$(tput bold)"
 NC="$(tput sgr0)"
 
-#TODO: make separte repo for custom bins/scripts
-#TODO:  `-> make it as submodule in dotfiles
-#TODO:       `-> in setup make it symlink to ~/.local/bin
-#TODO: make stderr show up as red text
+#TODO: make syntax highlighting
 recat(){
 	local depth=$2
-	local depth=$(( $depth+1 ))
+	local depth=$(( $depth+0 ))
 
 	local dir=$1
 	if [ -n "$dir" ]; then
@@ -23,6 +20,8 @@ recat(){
 	fi
 
 	local indent=$( printf -v dents '%*s' "$depth"; printf '%s' "${dents// /'  '}" )
+
+	local depth=$(( $depth+1 ))
 
 	for i in $( ls $dir ); do
 		if [ -L $i ]; then
@@ -35,7 +34,8 @@ recat(){
 			recat $dir$i $depth
 		else
 			echo $GREEN"$indent"$i$NC:
-			cat -n $dir$i | sed -e "s/\t/$NC /g" -e "s/^/$indent$GREY│/"
+			#TODO: make stderr show up as red text
+			cat -n $dir$i | sed -e "s/\t/$NC /" -e "s/^/$indent$GREY│/" -e "s/\t/  /g"
 			#) 2> >(cat < <(echo $RED) - < <(echo $NC))
 		fi
 	done
