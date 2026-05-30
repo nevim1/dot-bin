@@ -23,6 +23,8 @@ recat(){
 	local dir=$1
 	if [ -n "$dir" ]; then
 		local dir+="/"
+	else
+		local dir="./"
 	fi
 
 	local indent=$( printf -v dents '%*s' "$depth"; printf '%s' "${dents// /'│  '}" )
@@ -45,4 +47,4 @@ recat(){
 	done
 }
 
-recat $@
+recat "$@"
