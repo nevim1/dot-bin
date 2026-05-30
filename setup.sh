@@ -2,6 +2,8 @@
 
 dir=$(cd "$(dirname "$0")"; pwd)
 
+mkdir -p ~./local/bin
+
 # go over all files in this repo
 for i in $(ls -A "$dir"); do
 	# skip markdowns, git files and this script
