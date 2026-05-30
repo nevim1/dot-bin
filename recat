@@ -25,18 +25,17 @@ recat(){
 		local dir+="/"
 	fi
 
-	local indent=$( printf -v dents '%*s' "$depth"; printf '%s' "${dents// /'  '}" )
+	local indent=$( printf -v dents '%*s' "$depth"; printf '%s' "${dents// /'│  '}" )
 
 	local depth=$(( $depth+1 ))
 
-	for i in $( ls $dir ); do
-		if [ -L $i ]; then
-			echo -n $CYAN
-			echo -n "$indent"
+	for i in $( ls "$dir" ); do
+		if [ -L "$i" ]; then
+			echo -n $GREY"$indent"$CYAN
 			stat $i | grep File | tail -c +9
 			echo -n $NC
-		elif [ -d $i ]; then
-			echo "$indent"$BLUE$i$NC:
+		elif [ -d "$i" ]; then
+			echo $GREY"$indent"$BLUE$i$NC:
 			recat $dir$i $depth
 		else
 			echo $GREY"$indent"$GREEN$i$NC:
