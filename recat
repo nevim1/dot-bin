@@ -9,6 +9,12 @@ GREY="$(tput setaf 8)"
 BOLD="$(tput bold)"
 NC="$(tput sgr0)"
 
+helper(){
+	while read -r line ; do
+		echo $GREY"$1"$RED$line$NC
+	done
+}
+
 #TODO: make syntax highlighting
 recat(){
 	local depth=$2
@@ -33,10 +39,9 @@ recat(){
 			echo "$indent"$BLUE$i$NC:
 			recat $dir$i $depth
 		else
-			echo $GREEN"$indent"$i$NC:
-			#TODO: make stderr show up as red text
-			cat -n $dir$i | sed -e "s/\t/$NC /" -e "s/^/$indent$GREY│/" -e "s/\t/  /g"
-			#) 2> >(cat < <(echo $RED) - < <(echo $NC))
+			echo $GREY"$indent"$GREEN$i$NC:
+			{ { cat -n $dir$i | sed -e "s/\t/$NC /" -e "s/^ /│/" -e "s/^/$GREY$indent/" -e "s/\t/  /g" 1>&3 ; } 2>&1 \
+				| helper "$indent" 1>&2 ; } 3>&1
 		fi
 	done
 }
