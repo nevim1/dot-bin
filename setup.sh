@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+dir="$(dirname "$0")"
+
 # go over all files in this repo
-for i in $(ls -A); do
+for i in $(ls -A "$dir"); do
 	# skip markdowns, git files and this script
 	mi=$( echo $i | sed -r -e s/.*\.md// -e s/^\.git\(i.*$\|$\)// -e s/setup\.sh// )
 	if [[ ! -z $mi ]] then
@@ -10,12 +12,12 @@ for i in $(ls -A); do
 			echo $mi was found in your local bins.
 			if read -p "Replace it? (y/N) " conf && [[ "$conf" =~ ^[yY]([eE][sS]?)?$ ]]; then
 				mv ~/.local/bin/$mi ~/.local/bin/."$mi".old
-				ln -s "$(dirname "$0")"/$mi ~/.local/bin/$mi
+				ln -s "$dir)"/$mi ~/.local/bin/$mi
 				echo the old version was moved to ~/.local/bin/."$mi".old
 			fi
 		else
-			echo whot "$(dirname "$0")"/$mi
-			ln -s "$(dirname "$0")"/$mi ~/.local/bin/$mi
+			echo whot "$dir"/$mi
+			ln -s "$dir"/$mi ~/.local/bin/$mi
 		fi
 	fi
 done
