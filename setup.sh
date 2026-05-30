@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dir="$(dirname "$0")"
+dir=$(cd "$(dirname "$0")"; pwd)
 
 # go over all files in this repo
 for i in $(ls -A "$dir"); do
