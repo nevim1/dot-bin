@@ -10,12 +10,12 @@ for i in $(ls -A); do
 			echo $mi was found in your local bins.
 			if read -p "Replace it? (y/N) " conf && [[ "$conf" =~ ^[yY]([eE][sS]?)?$ ]]; then
 				mv ~/.local/bin/$mi ~/.local/bin/."$mi".old
-				ln -s "$PWD"/$mi ~/.local/bin/$mi
+				ln -s "$(dirname "$0")"/$mi ~/.local/bin/$mi
 				echo the old version was moved to ~/.local/bin/."$mi".old
 			fi
 		else
-			echo whot "$PWD"/$mi
-			ln -s "$PWD"/$mi ~/.local/bin/$mi
+			echo whot "$(dirname "$0")"/$mi
+			ln -s "$(dirname "$0")"/$mi ~/.local/bin/$mi
 		fi
 	fi
 done
