@@ -18,7 +18,7 @@ helper(){
 #TODO: make syntax highlighting
 recat(){
 	local depth=$2
-	local depth=$(( $depth+0 ))
+	local depth=$(( depth+0 ))
 
 	local dir=$1
 	if [ -n "$dir" ]; then
@@ -29,19 +29,20 @@ recat(){
 
 	local indent=$( printf -v dents '%*s' "$depth"; printf '%s' "${dents// /'│  '}" )
 
-	local depth=$(( $depth+1 ))
+	local depth=$(( depth+1 ))
 
-	for i in $( ls "$dir" ); do
+	for i in "$dir"* ; do
+		#TODO: add check if file is binary pls use the file command
 		if [ -L "$i" ]; then
 			echo -n $GREY"$indent"$CYAN
 			stat $i | grep File | tail -c +9
 			echo -n $NC
 		elif [ -d "$i" ]; then
 			echo $GREY"$indent"$BLUE$i$NC:
-			recat $dir$i $depth
+			recat "$dir$i" $depth
 		else
 			echo $GREY"$indent"$GREEN$i$NC:
-			{ { cat -n $dir$i | sed -e "s/\t/$NC /" -e "s/^ /│/" -e "s/^/$GREY$indent/" -e "s/\t/  /g" 1>&3 ; } 2>&1 \
+			{ { cat -n "$dir$i" | sed -e "s/\t/$NC /" -e "s/^ /│/" -e "s/^/$GREY$indent/" -e "s/\t/  /g" 1>&3 ; } 2>&1 \
 				| helper "$indent" 1>&2 ; } 3>&1
 		fi
 	done
